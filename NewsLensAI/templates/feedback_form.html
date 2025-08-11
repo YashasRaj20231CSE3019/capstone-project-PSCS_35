@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback for "{{ story.title }}" - 360° News Feedback Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Story Preview -->
+        <div class="col-lg-4 mb-4">
+            <div class="sticky-top" style="top: 2rem;">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-newspaper me-2"></i>Story Preview
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% if story.image_url %}
+                            <img src="{{ story.image_url }}" alt="{{ story.title }}" class="img-fluid rounded mb-3">
+                        {% else %}
+                            <img src="https://pixabay.com/get/gad288ec7cae06251419c6217a312c01f21692afe93d673974f9e42d75bb2d5c780822dcd06088d9e15115f39800d4c512652505123e316ea94afecf74d1ff88c_1280.jpg" 
+                                 alt="News story" class="img-fluid rounded mb-3">
+                        {% endif %}
+                        
+                        <h6 class="fw-bold">{{ story.title }}</h6>
+                        <p class="text-muted small">{{ story.content[:200] }}...</p>
+                        
+                        <div class="story-meta text-muted small">
+                            <div class="mb-1">
+                                <i class="fas fa-user me-1"></i>{{ story.author }}
+                            </div>
+                            <div class="mb-1">
+                                <i class="fas fa-building me-1"></i>{{ story.publication }}
+                            </div>
+                            <div class="mb-1">
+                                <i class="fas fa-tag me-1"></i>{{ story.category.title() }}
+                            </div>
+                            <div class="mb-1">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ story.region }}
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('story_detail', story_id=story.id) }}" 
+                           class="btn btn-outline-primary btn-sm w-100 mt-3">
+                            <i class="fas fa-eye me-1"></i>View Full Story
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-comment-dots me-2"></i>Share Your Feedback
+                    </h4>
+                    <p class="mb-0 mt-2 opacity-75">Help improve regional journalism through your community input</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <!-- Rating Instructions -->
+                        <div class="alert alert-info mb-4">
+                            <h6><i class="fas fa-info-circle me-2"></i>How to Rate:</h6>
+                            <div class="row small">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Accuracy:</strong> How factual and correct is the information?</p>
+                                    <p class="mb-2"><strong>Bias:</strong> How balanced and objective is the reporting?</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Relevance:</strong> How important is this story to the community?</p>
+                                    <p class="mb-0"><strong>Local Impact:</strong> How does this affect local residents?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multi-dimensional Ratings -->
+                        <div class="ratings-section mb-5">
+                            <h5 class="mb-4">
+                                <i class="fas fa-star me-2 text-warning"></i>Rate This Story
+                            </h5>
+                            
+                            <!-- Accuracy Rating -->
+                            <div class="rating-group mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-check-circle me-2 text-primary"></i>Accuracy
+                                </label>
+                                <p class="text-muted small mb-3">How factual and correct is the information presented?</p>
+                                <div class="rating-input" data-rating="accuracy_rating">
+                                    <input type="hidden" name="accuracy_rating" required>
+                                    <div class="star-rating">
+                                        <i class="fas fa-star" data-value="1"></i>
+                                        <i class="fas fa-star" data-value="2"></i>
+                                        <i class="fas fa-star" data-value="3"></i>
+                                        <i class="fas fa-star" data-value="4"></i>
+                                        <i class="fas fa-star" data-value="5"></i>
+                                    </div>
+                                    <div class="rating-labels d-flex justify-content-between text-muted small mt-1">
+                                        <span>Very Inaccurate</span>
+                                        <span>Very Accurate</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Please rate the accuracy.</div>
+                            </div>
+
+                            <!-- Bias Rating -->
+                            <div class="rating-group mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-balance-scale me-2 text-success"></i>Bias
+                                </label>
+                                <p class="text-muted small mb-3">How balanced and objective is the reporting?</p>
+                                <div class="rating-input" data-rating="bias_rating">
+                                    <input type="hidden" name="bias_rating" required>
+                                    <div class="star-rating">
+                                        <i class="fas fa-star" data-value="1"></i>
+                                        <i class="fas fa-star" data-value="2"></i>
+                                        <i class="fas fa-star" data-value="3"></i>
+                                        <i class="fas fa-star" data-value="4"></i>
+                                        <i class="fas fa-star" data-value="5"></i>
+                                    </div>
+                                    <div class="rating-labels d-flex justify-content-between text-muted small mt-1">
+                                        <span>Very Biased</span>
+                                        <span>Very Balanced</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Please rate the bias level.</div>
+                            </div>
+
+                            <!-- Relevance Rating -->
+                            <div class="rating-group mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-bullseye me-2 text-info"></i>Relevance
+                                </label>
+                                <p class="text-muted small mb-3">How important is this story to the community?</p>
+                                <div class="rating-input" data-rating="relevance_rating">
+                                    <input type="hidden" name="relevance_rating" required>
+                                    <div class="star-rating">
+                                        <i class="fas fa-star" data-value="1"></i>
+                                        <i class="fas fa-star" data-value="2"></i>
+                                        <i class="fas fa-star" data-value="3"></i>
+                                        <i class="fas fa-star" data-value="4"></i>
+                                        <i class="fas fa-star" data-value="5"></i>
+                                    </div>
+                                    <div class="rating-labels d-flex justify-content-between text-muted small mt-1">
+                                        <span>Not Relevant</span>
+                                        <span>Very Relevant</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Please rate the relevance.</div>
+                            </div>
+
+                            <!-- Local Impact Rating -->
+                            <div class="rating-group mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-home me-2 text-warning"></i>Local Impact
+                                </label>
+                                <p class="text-muted small mb-3">How does this story affect local residents?</p>
+                                <div class="rating-input" data-rating="local_impact_rating">
+                                    <input type="hidden" name="local_impact_rating" required>
+                                    <div class="star-rating">
+                                        <i class="fas fa-star" data-value="1"></i>
+                                        <i class="fas fa-star" data-value="2"></i>
+                                        <i class="fas fa-star" data-value="3"></i>
+                                        <i class="fas fa-star" data-value="4"></i>
+                                        <i class="fas fa-star" data-value="5"></i>
+                                    </div>
+                                    <div class="rating-labels d-flex justify-content-between text-muted small mt-1">
+                                        <span>No Impact</span>
+                                        <span>High Impact</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">Please rate the local impact.</div>
+                            </div>
+                        </div>
+
+                        <!-- Written Feedback -->
+                        <div class="mb-4">
+                            <label for="comment" class="form-label fw-bold">
+                                <i class="fas fa-comment me-2"></i>Additional Comments (Optional)
+                            </label>
+                            <textarea class="form-control" id="comment" name="comment" rows="4" 
+                                      placeholder="Share your thoughts, concerns, or additional context about this story..."></textarea>
+                            <div class="form-text">Your comments will be analyzed for sentiment and community insights.</div>
+                        </div>
+
+                        <!-- Reviewer Information -->
+                        <div class="reviewer-info mb-4">
+                            <h6 class="mb-3 border-bottom pb-2">
+                                <i class="fas fa-user me-2"></i>Your Information (Optional)
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="reviewer_name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="reviewer_name" name="reviewer_name" 
+                                           placeholder="Your name (can be anonymous)">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="reviewer_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="reviewer_email" name="reviewer_email" 
+                                           placeholder="your@email.com (for follow-up)">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewer_location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="reviewer_location" name="reviewer_location" 
+                                       placeholder="Your city/area (helps with local context)">
+                            </div>
+                        </div>
+
+                        <!-- AI Analysis Notice -->
+                        <div class="alert alert-light border">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-brain fa-2x text-primary me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">AI-Powered Analysis</h6>
+                                    <p class="mb-0 small text-muted">
+                                        Your feedback will be analyzed using AI to identify sentiment patterns and community insights. 
+                                        This helps news organizations understand public perception and improve their reporting.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Notice -->
+                        <div class="alert alert-info small">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Privacy:</strong> Your personal information is optional and will only be used to provide context 
+                            for your feedback. Anonymous feedback is welcome and equally valuable.
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('story_detail', story_id=story.id) }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Back to Story
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg" id="submitBtn" disabled>
+                                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Feedback Examples -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Feedback Examples
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-success">
+                                <i class="fas fa-thumbs-up me-1"></i>Constructive Feedback
+                            </h6>
+                            <ul class="small text-muted">
+                                <li>"Good coverage of the city council meeting, but would like more details on the budget vote"</li>
+                                <li>"Accurate reporting, though the headline could be less sensational"</li>
+                                <li>"This story directly affects our neighborhood - very relevant"</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-info">
+                                <i class="fas fa-comments me-1"></i>Community Impact
+                            </h6>
+                            <ul class="small text-muted">
+                                <li>"More stories like this help residents stay informed about local issues"</li>
+                                <li>"Consider interviewing more diverse community voices"</li>
+                                <li>"The environmental impact section was particularly informative"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Star rating functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingGroups = document.querySelectorAll('.rating-input');
+        
+        ratingGroups.forEach(group => {
+            const stars = group.querySelectorAll('.star-rating i');
+            const hiddenInput = group.querySelector('input[type="hidden"]');
+            const ratingName = group.dataset.rating;
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', function() {
+                    const value = parseInt(this.dataset.value);
+                    hiddenInput.value = value;
+                    
+                    // Update star display
+                    stars.forEach((s, i) => {
+                        if (i < value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                    
+                    // Check if all ratings are complete
+                    checkFormComplete();
+                });
+                
+                // Hover effects
+                star.addEventListener('mouseenter', function() {
+                    const value = parseInt(this.dataset.value);
+                    stars.forEach((s, i) => {
+                        if (i < value) {
+                            s.classList.add('hover');
+                        } else {
+                            s.classList.remove('hover');
+                        }
+                    });
+                });
+            });
+            
+            // Remove hover effects when leaving the rating group
+            group.addEventListener('mouseleave', function() {
+                stars.forEach(s => s.classList.remove('hover'));
+            });
+        });
+        
+        function checkFormComplete() {
+            const requiredRatings = ['accuracy_rating', 'bias_rating', 'relevance_rating', 'local_impact_rating'];
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const allComplete = requiredRatings.every(rating => {
+                const input = document.querySelector(`input[name="${rating}"]`);
+                return input && input.value;
+            });
+            
+            submitBtn.disabled = !allComplete;
+            
+            if (allComplete) {
+                submitBtn.classList.remove('btn-secondary');
+                submitBtn.classList.add('btn-success');
+            } else {
+                submitBtn.classList.remove('btn-success');
+                submitBtn.classList.add('btn-secondary');
+            }
+        }
+        
+        // Form validation
+        const form = document.querySelector('.needs-validation');
+        form.addEventListener('submit', function(event) {
+            const requiredRatings = ['accuracy_rating', 'bias_rating', 'relevance_rating', 'local_impact_rating'];
+            let isValid = true;
+            
+            requiredRatings.forEach(rating => {
+                const input = document.querySelector(`input[name="${rating}"]`);
+                const group = input.closest('.rating-group');
+                
+                if (!input.value) {
+                    isValid = false;
+                    group.classList.add('is-invalid');
+                } else {
+                    group.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+        });
+    });
+</script>
+{% endblock %}

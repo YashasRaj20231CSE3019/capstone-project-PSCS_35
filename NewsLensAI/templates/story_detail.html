@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}{{ story.title }} - 360° News Feedback Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Story Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('index', category=story.category) }}">{{ story.category.title() }}</a></li>
+                    <li class="breadcrumb-item active">{{ story.title[:50] }}...</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Story Content -->
+        <div class="col-lg-8">
+            <article class="story-article">
+                <header class="mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary fs-6">{{ story.category.title() }}</span>
+                        <span class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>{{ story.region }}
+                        </span>
+                    </div>
+                    
+                    <h1 class="display-5 fw-bold mb-3">{{ story.title }}</h1>
+                    
+                    <div class="story-meta d-flex flex-wrap gap-3 mb-4 text-muted">
+                        <span><i class="fas fa-user me-1"></i>{{ story.author }}</span>
+                        <span><i class="fas fa-building me-1"></i>{{ story.publication }}</span>
+                        <span><i class="fas fa-calendar me-1"></i>{{ story.date_published.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                        {% if story.url %}
+                        <span><a href="{{ story.url }}" target="_blank" class="text-decoration-none">
+                            <i class="fas fa-external-link-alt me-1"></i>Original Source
+                        </a></span>
+                        {% endif %}
+                    </div>
+                </header>
+
+                {% if story.image_url %}
+                <div class="story-image mb-4">
+                    <img src="{{ story.image_url }}" alt="{{ story.title }}" class="img-fluid rounded shadow">
+                </div>
+                {% endif %}
+
+                <div class="story-content">
+                    {{ story.content|safe|nl2br }}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="story-actions mt-5 pt-4 border-top">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="{{ url_for('submit_feedback', story_id=story.id) }}" 
+                               class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-comment-dots me-2"></i>Give Your Feedback
+                            </a>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <button class="btn btn-outline-primary btn-lg w-100" onclick="shareStory()">
+                                <i class="fas fa-share-alt me-2"></i>Share This Story
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Sidebar with Feedback Summary -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 2rem;">
+                <!-- Feedback Summary Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Feedback Summary
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if insights.total_feedback > 0 %}
+                            <div class="feedback-stats">
+                                <div class="stat-item mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>Total Feedback:</span>
+                                        <span class="badge bg-info">{{ insights.total_feedback }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="rating-summary mb-4">
+                                    <h6>Average Ratings:</h6>
+                                    {% for rating_type, value in insights.avg_ratings.items() %}
+                                    <div class="rating-row mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>{{ rating_type.replace('_', ' ').title() }}:</span>
+                                            <span class="fw-bold">{{ "%.1f"|format(value) }}/5</span>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar" style="width: {{ (value/5)*100 }}%"></div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="sentiment-summary">
+                                    <h6>Community Sentiment:</h6>
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <div class="sentiment-stat">
+                                                <i class="fas fa-smile text-success fa-2x"></i>
+                                                <div class="fw-bold">{{ insights.sentiment_distribution.positive }}</div>
+                                                <small class="text-muted">Positive</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="sentiment-stat">
+                                                <i class="fas fa-meh text-warning fa-2x"></i>
+                                                <div class="fw-bold">{{ insights.sentiment_distribution.neutral }}</div>
+                                                <small class="text-muted">Neutral</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="sentiment-stat">
+                                                <i class="fas fa-frown text-danger fa-2x"></i>
+                                                <div class="fw-bold">{{ insights.sentiment_distribution.negative }}</div>
+                                                <small class="text-muted">Negative</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Charts Container -->
+                                <div class="charts-container mt-4">
+                                    <canvas id="ratingsChart" width="300" height="200"></canvas>
+                                    <canvas id="sentimentChart" width="300" height="200" class="mt-3"></canvas>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">No feedback yet</h6>
+                                <p class="text-muted small">Be the first to provide feedback on this story!</p>
+                                <a href="{{ url_for('submit_feedback', story_id=story.id) }}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-comment me-1"></i>Give Feedback
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Related Stories -->
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-newspaper me-2"></i>More from {{ story.region }}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-3">
+                            <img src="https://pixabay.com/get/g790a4987ad7dc931b6bbf3bf094154c6f45f3cb63ba16dddf362653d7ae288797c6468f5949148312b669682dc2dabc359bfa431158d601ae67f82b32dce2d73_1280.jpg" 
+                                 alt="Regional news" class="img-fluid rounded mb-3" style="max-width: 200px;">
+                            <p class="text-muted small">Discover more stories from your region</p>
+                            <a href="{{ url_for('index', region=story.region) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-map-marker-alt me-1"></i>Browse Regional News
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Comments Section -->
+    {% if feedbacks %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments me-2"></i>Community Feedback ({{ feedbacks|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for feedback in feedbacks %}
+                    <div class="feedback-item mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="feedback-header">
+                                <h6 class="mb-1">
+                                    {% if feedback.reviewer_name %}
+                                        {{ feedback.reviewer_name }}
+                                    {% else %}
+                                        Anonymous Reviewer
+                                    {% endif %}
+                                    {% if feedback.reviewer_location %}
+                                        <small class="text-muted">from {{ feedback.reviewer_location }}</small>
+                                    {% endif %}
+                                </h6>
+                                <small class="text-muted">
+                                    {{ feedback.date_created.strftime('%B %d, %Y at %I:%M %p') }}
+                                </small>
+                            </div>
+                            {% if feedback.sentiment_label %}
+                            <span class="badge bg-{% if feedback.sentiment_label == 'positive' %}success{% elif feedback.sentiment_label == 'negative' %}danger{% else %}secondary{% endif %}">
+                                {% if feedback.sentiment_label == 'positive' %}
+                                    <i class="fas fa-smile me-1"></i>Positive
+                                {% elif feedback.sentiment_label == 'negative' %}
+                                    <i class="fas fa-frown me-1"></i>Negative
+                                {% else %}
+                                    <i class="fas fa-meh me-1"></i>Neutral
+                                {% endif %}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="feedback-ratings mb-3">
+                            <div class="row text-center">
+                                <div class="col-3">
+                                    <div class="rating-badge">
+                                        <div class="fw-bold text-primary">{{ feedback.accuracy_rating }}/5</div>
+                                        <small class="text-muted">Accuracy</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="rating-badge">
+                                        <div class="fw-bold text-success">{{ feedback.bias_rating }}/5</div>
+                                        <small class="text-muted">Bias</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="rating-badge">
+                                        <div class="fw-bold text-info">{{ feedback.relevance_rating }}/5</div>
+                                        <small class="text-muted">Relevance</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="rating-badge">
+                                        <div class="fw-bold text-warning">{{ feedback.local_impact_rating }}/5</div>
+                                        <small class="text-muted">Local Impact</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if feedback.comment %}
+                        <div class="feedback-comment">
+                            <p class="mb-0">{{ feedback.comment }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    // Initialize charts if feedback exists
+    {% if insights.total_feedback > 0 %}
+    initializeStoryCharts({{ story.id }});
+    {% endif %}
+
+    function shareStory() {
+        if (navigator.share) {
+            navigator.share({
+                title: '{{ story.title }}',
+                text: 'Check out this news story and share your feedback',
+                url: window.location.href
+            });
+        } else {
+            // Fallback to copying URL
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Story URL copied to clipboard!');
+            });
+        }
+    }
+</script>
+{% endblock %}

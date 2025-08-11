@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}360° News Feedback Platform{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+                <i class="fas fa-brain me-2"></i>
+                360° AI News Feedback
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">
+                            <i class="fas fa-cogs me-1"></i>Features
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">
+                            <i class="fas fa-lightbulb me-1"></i>How It Works
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">
+                            <i class="fas fa-info-circle me-1"></i>About Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">
+                            <i class="fas fa-envelope me-1"></i>Contact
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <a class="btn btn-warning btn-sm" href="{{ url_for('submit_story') }}">
+                        <i class="fas fa-plus me-1"></i>Submit Story
+                    </a>
+                    <a class="btn btn-outline-light btn-sm ms-2" href="{{ url_for('dashboard') }}">
+                        <i class="fas fa-chart-bar me-1"></i>Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section (only on home page) -->
+    {% if request.endpoint == 'index' %}
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold text-white mb-4">
+                        360° Feedback for Regional News
+                    </h1>
+                    <p class="lead text-white-50 mb-4">
+                        Empowering communities with AI-powered feedback analysis for local journalism. 
+                        Rate accuracy, bias, relevance, and local impact.
+                    </p>
+                    <a href="{{ url_for('submit_story') }}" class="btn btn-warning btn-lg">
+                        <i class="fas fa-plus me-2"></i>Submit a Story
+                    </a>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://pixabay.com/get/g175d9cc10e7df61cd3d917462c524efda6bfaa96132192674002c29c45875c42a2966df06c119f630e0450646155f0f877b73093bcf99c7528a526fe1365431a_1280.jpg" 
+                         alt="Regional Newsroom" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h5><i class="fas fa-newspaper me-2"></i>360° News Feedback</h5>
+                    <p class="text-muted">Enhancing regional journalism through community-driven feedback and AI analysis.</p>
+                </div>
+                <div class="col-lg-4">
+                    <h6>AI/ML Features</h6>
+                    <ul class="list-unstyled feature-links">
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-brain me-2"></i>AI Sentiment Analysis
+                        </a></li>
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-globe-americas me-2"></i>Regional Language Support
+                        </a></li>
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-users me-2"></i>Audience Engagement Reports
+                        </a></li>
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-shield-alt me-2"></i>Bias Detection
+                        </a></li>
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-file-alt me-2"></i>Automated Feedback Summary
+                        </a></li>
+                        <li><a href="#features" class="feature-link">
+                            <i class="fas fa-lock me-2"></i>Data Privacy & Security
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6>Follow Us</h6>
+                    <p class="text-muted mb-3">Connect with us on social media for updates and community discussions.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/yourpage" target="_blank" class="social-link me-3" title="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="https://twitter.com/yourhandle" target="_blank" class="social-link me-3" title="Twitter / X">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="https://instagram.com/yourhandle" target="_blank" class="social-link me-3" title="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/yourprofile" target="_blank" class="social-link me-3" title="LinkedIn">
+                            <i class="fab fa-linkedin-in fa-lg"></i>
+                        </a>
+                        <a href="https://youtube.com/@yourchannel" target="_blank" class="social-link" title="YouTube">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-users me-1"></i>Join our community for regional journalism insights
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2025 360° News Feedback Platform. Empowering regional journalism.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

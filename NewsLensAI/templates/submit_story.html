@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Submit News Story - 360° News Feedback Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Submit a News Story
+                    </h4>
+                    <p class="mb-0 mt-2 opacity-75">Share regional news for community feedback and analysis</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <!-- Story Title -->
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-bold">
+                                <i class="fas fa-heading me-1"></i>Story Title *
+                            </label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title" required>
+                            <div class="invalid-feedback">Please provide a story title.</div>
+                        </div>
+
+                        <!-- Story Content -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-bold">
+                                <i class="fas fa-align-left me-1"></i>Story Content *
+                            </label>
+                            <textarea class="form-control" id="content" name="content" rows="12" required 
+                                      placeholder="Enter the full story content here..."></textarea>
+                            <div class="invalid-feedback">Please provide the story content.</div>
+                            <div class="form-text">Provide the complete article text for community review.</div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Author -->
+                            <div class="col-md-6 mb-3">
+                                <label for="author" class="form-label fw-bold">
+                                    <i class="fas fa-user-edit me-1"></i>Author *
+                                </label>
+                                <input type="text" class="form-control" id="author" name="author" required>
+                                <div class="invalid-feedback">Please provide the author name.</div>
+                            </div>
+
+                            <!-- Publication -->
+                            <div class="col-md-6 mb-3">
+                                <label for="publication" class="form-label fw-bold">
+                                    <i class="fas fa-building me-1"></i>Publication *
+                                </label>
+                                <input type="text" class="form-control" id="publication" name="publication" required>
+                                <div class="invalid-feedback">Please provide the publication name.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Category -->
+                            <div class="col-md-6 mb-3">
+                                <label for="category" class="form-label fw-bold">
+                                    <i class="fas fa-tags me-1"></i>Category *
+                                </label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select a category...</option>
+                                    <option value="local politics">Local Politics</option>
+                                    <option value="community events">Community Events</option>
+                                    <option value="education">Education</option>
+                                    <option value="health">Health</option>
+                                    <option value="environment">Environment</option>
+                                    <option value="business">Business</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="culture">Culture</option>
+                                    <option value="crime">Crime & Safety</option>
+                                    <option value="infrastructure">Infrastructure</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a category.</div>
+                            </div>
+
+                            <!-- Region -->
+                            <div class="col-md-6 mb-3">
+                                <label for="region" class="form-label fw-bold">
+                                    <i class="fas fa-map-marker-alt me-1"></i>Region *
+                                </label>
+                                <input type="text" class="form-control" id="region" name="region" required 
+                                       placeholder="e.g., Downtown Springfield, North County">
+                                <div class="invalid-feedback">Please provide the region/location.</div>
+                            </div>
+                        </div>
+
+                        <!-- Publication Date -->
+                        <div class="mb-3">
+                            <label for="date_published" class="form-label fw-bold">
+                                <i class="fas fa-calendar me-1"></i>Publication Date
+                            </label>
+                            <input type="date" class="form-control" id="date_published" name="date_published">
+                            <div class="form-text">Leave blank to use current date.</div>
+                        </div>
+
+                        <!-- Optional Fields -->
+                        <div class="mb-4">
+                            <h6 class="text-muted border-bottom pb-2 mb-3">Optional Information</h6>
+                            
+                            <div class="mb-3">
+                                <label for="url" class="form-label">
+                                    <i class="fas fa-link me-1"></i>Original Article URL
+                                </label>
+                                <input type="url" class="form-control" id="url" name="url" 
+                                       placeholder="https://example.com/article">
+                                <div class="form-text">Link to the original article if available.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="image_url" class="form-label">
+                                    <i class="fas fa-image me-1"></i>Featured Image URL
+                                </label>
+                                <input type="url" class="form-control" id="image_url" name="image_url" 
+                                       placeholder="https://example.com/image.jpg">
+                                <div class="form-text">URL of an image to accompany the story.</div>
+                            </div>
+                        </div>
+
+                        <!-- Submission Guidelines -->
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>Submission Guidelines:</h6>
+                            <ul class="mb-0 small">
+                                <li>Ensure the story is relevant to regional/local communities</li>
+                                <li>Content should be factual and from credible sources</li>
+                                <li>Stories will be reviewed by community members for accuracy, bias, relevance, and local impact</li>
+                                <li>AI analysis will help identify sentiment patterns in feedback</li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Story
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5><i class="fas fa-eye me-2"></i>How Your Story Will Appear</h5>
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <img src="https://pixabay.com/get/g3d97ed0b5cac252c567b2005ed22e5f28936ef4f63d9a068801090734809c09c46fdb2425015a1c653e15911685414666dba22ab06e7d26ea93487f0431f5a9d_1280.jpg" 
+                                 alt="Story card preview" class="img-fluid rounded shadow">
+                            <h6 class="mt-2">Story Card View</h6>
+                            <p class="text-muted small">How your story appears in the main feed</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <img src="https://pixabay.com/get/g58383867a8d69e897458927f18a0e2a97a4b9a8addb9363dfd73dd91b81e9494be8f335c1a3f0b095c2521167a96143f339eb88208f5f3d5daa6263872da1c92_1280.jpg" 
+                                 alt="Feedback interface" class="img-fluid rounded shadow">
+                            <h6 class="mt-2">Feedback Interface</h6>
+                            <p class="text-muted small">Multi-dimensional rating system for community feedback</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <img src="https://pixabay.com/get/gffdb13bfb8498c57359977d76522a6e8de97bd813a1641fa1513c46b9c5e1051d3058bf92072b9ea189ce0b3c68beb8b2616fe96814f08637abb4c4f54db6987_1280.jpg" 
+                                 alt="Analytics view" class="img-fluid rounded shadow">
+                            <h6 class="mt-2">AI Analytics</h6>
+                            <p class="text-muted small">Automated sentiment analysis and feedback insights</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Character counter for content
+    document.getElementById('content').addEventListener('input', function() {
+        const content = this.value;
+        const wordCount = content.trim().split(/\s+/).length;
+        
+        if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('word-count')) {
+            const wordCounter = document.createElement('div');
+            wordCounter.className = 'word-count form-text';
+            this.parentNode.insertBefore(wordCounter, this.nextElementSibling);
+        }
+        
+        const counter = this.parentNode.querySelector('.word-count');
+        counter.textContent = `Word count: ${wordCount}`;
+        
+        if (wordCount < 50) {
+            counter.className = 'word-count form-text text-warning';
+            counter.textContent += ' (Consider adding more detail)';
+        } else if (wordCount > 2000) {
+            counter.className = 'word-count form-text text-info';
+            counter.textContent += ' (Long article - consider breaking into sections)';
+        } else {
+            counter.className = 'word-count form-text text-success';
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+
+{% block title %}AI-Powered Regional News Feedback Platform{% endblock %}
+
+{% block content %}
+<!-- 
+    LANDING PAGE TEMPLATE
+    This template creates a comprehensive landing page with multiple sections:
+    1. Hero Section - Full-screen intro with call-to-action
+    2. Features Section - 8 AI/ML feature cards in a responsive grid
+    3. How It Works - 4-step process visualization
+    4. About Us - Company info with statistics
+    5. Contact Section - Contact form and info
+    6. Call-to-Action - Final conversion section
+-->
+<!-- Hero Section -->
+<section id="home" class="hero-landing">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="row align-items-center min-vh-100 pt-5">
+            <div class="col-lg-6">
+                <div class="hero-content text-white">
+                    <h1 class="display-3 fw-bold mb-4 animate-fade-in">
+                        AI-Powered 360° News Feedback Platform
+                    </h1>
+                    <p class="lead mb-4 animate-fade-in-delay-1">
+                        Transform regional journalism with intelligent feedback analysis. Our advanced AI system 
+                        provides comprehensive insights into news accuracy, bias detection, and community sentiment 
+                        to enhance media quality and trust.
+                    </p>
+                    <div class="hero-features mb-4 animate-fade-in-delay-2">
+                        <div class="feature-tag">
+                            <i class="fas fa-brain me-2"></i>AI Sentiment Analysis
+                        </div>
+                        <div class="feature-tag">
+                            <i class="fas fa-shield-alt me-2"></i>Bias Detection
+                        </div>
+                        <div class="feature-tag">
+                            <i class="fas fa-chart-line me-2"></i>Real-time Analytics
+                        </div>
+                    </div>
+                    <div class="hero-buttons animate-fade-in-delay-3">
+                        <a href="{{ url_for('submit_story') }}" class="btn btn-warning btn-lg me-3">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="#how-it-works" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-play me-2"></i>Learn How
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image-container animate-fade-in-delay-1">
+                    <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="AI News Analysis" class="img-fluid rounded-3 shadow-lg hero-image">
+                    <div class="floating-card">
+                        <div class="card bg-white shadow">
+                            <div class="card-body text-center">
+                                <div class="ai-indicator">
+                                    <i class="fas fa-robot text-primary fa-2x mb-2"></i>
+                                    <h6 class="mb-0 text-dark">AI Analysis Active</h6>
+                                    <small class="text-muted">Processing feedback...</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <a href="#features" class="text-white">
+            <i class="fas fa-chevron-down fa-2x animate-bounce"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold mb-3">Powerful AI Features</h2>
+                <p class="lead text-muted">Advanced machine learning capabilities designed for modern journalism</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <!-- AI Sentiment Analysis -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h5>AI Sentiment Analysis</h5>
+                    <p class="text-muted">Advanced natural language processing to analyze community sentiment and emotional responses to news stories in real-time.</p>
+                    <div class="feature-stats">
+                        <small class="text-primary"><i class="fas fa-check me-1"></i>99.2% Accuracy</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bias Detection -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Bias Detection</h5>
+                    <p class="text-muted">Intelligent algorithms detect political, cultural, and reporting bias to promote balanced and objective journalism.</p>
+                    <div class="feature-stats">
+                        <small class="text-success"><i class="fas fa-check me-1"></i>Multi-dimensional Analysis</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Regional Language Support -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h5>Regional Language Support</h5>
+                    <p class="text-muted">Multi-language processing capabilities to analyze feedback across diverse regional communities and dialects.</p>
+                    <div class="feature-stats">
+                        <small class="text-info"><i class="fas fa-check me-1"></i>15+ Languages</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Audience Engagement Reports -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Audience Engagement Reports</h5>
+                    <p class="text-muted">Comprehensive analytics on reader engagement, feedback patterns, and community interaction trends.</p>
+                    <div class="feature-stats">
+                        <small class="text-warning"><i class="fas fa-check me-1"></i>Real-time Insights</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Automated Feedback Summary -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5>Automated Feedback Summary</h5>
+                    <p class="text-muted">AI-generated summaries of community feedback with key insights and actionable recommendations for journalists.</p>
+                    <div class="feature-stats">
+                        <small class="text-primary"><i class="fas fa-check me-1"></i>Instant Reports</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Privacy & Security -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h5>Data Privacy & Security</h5>
+                    <p class="text-muted">Enterprise-grade security with end-to-end encryption ensuring complete protection of sensitive feedback data.</p>
+                    <div class="feature-stats">
+                        <small class="text-success"><i class="fas fa-check me-1"></i>GDPR Compliant</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Smart Categorization -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h5>Smart Categorization</h5>
+                    <p class="text-muted">Automatic content categorization and tagging using machine learning to organize news stories efficiently.</p>
+                    <div class="feature-stats">
+                        <small class="text-info"><i class="fas fa-check me-1"></i>Auto-tagging</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Predictive Analytics -->
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-crystal-ball"></i>
+                    </div>
+                    <h5>Predictive Analytics</h5>
+                    <p class="text-muted">Forecast reader engagement and identify trending topics using advanced machine learning algorithms.</p>
+                    <div class="feature-stats">
+                        <small class="text-warning"><i class="fas fa-check me-1"></i>Future Insights</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted">Simple 4-step process to transform your news feedback</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h5>Submit News Story</h5>
+                    <p class="text-muted">Upload your news article with metadata including category, region, and publication details.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5>Community Feedback</h5>
+                    <p class="text-muted">Community members provide multi-dimensional ratings and written feedback on accuracy, bias, and relevance.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>AI Analysis</h5>
+                    <p class="text-muted">Advanced AI algorithms process feedback for sentiment analysis, bias detection, and pattern recognition.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Insights & Reports</h5>
+                    <p class="text-muted">Receive comprehensive reports with actionable insights to improve journalism quality and community trust.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Process Flow Visualization -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="process-flow">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="AI Process Flow" class="img-fluid rounded shadow">
+                    <div class="process-overlay">
+                        <div class="text-center text-white">
+                            <h4>Powered by Advanced Machine Learning</h4>
+                            <p>Our AI system continuously learns and improves from community feedback</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Us Section -->
+<section id="about" class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Our Team" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="display-5 fw-bold mb-4">About Our Mission</h2>
+                <p class="lead mb-4">
+                    We're dedicated to enhancing the quality and trustworthiness of regional journalism through 
+                    innovative AI technology and community engagement.
+                </p>
+                <p class="text-muted mb-4">
+                    Our platform bridges the gap between newsrooms and their communities, providing valuable insights 
+                    that help journalists create more accurate, balanced, and relevant content. By leveraging advanced 
+                    machine learning algorithms, we transform community feedback into actionable intelligence.
+                </p>
+                <div class="about-stats">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h3 class="text-primary">10K+</h3>
+                                <small class="text-muted">Stories Analyzed</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h3 class="text-success">98%</h3>
+                                <small class="text-muted">Accuracy Rate</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <h3 class="text-warning">50+</h3>
+                                <small class="text-muted">Newsrooms</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold mb-3">Get In Touch</h2>
+                <p class="lead text-muted">Ready to transform your newsroom with AI-powered feedback?</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <form class="contact-form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="organization" class="form-label">Organization</label>
+                                    <input type="text" class="form-control" id="organization">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select class="form-select" id="role">
+                                        <option>Journalist</option>
+                                        <option>Editor</option>
+                                        <option>News Director</option>
+                                        <option>Community Manager</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <select class="form-select" id="subject">
+                                    <option>General Inquiry</option>
+                                    <option>Partnership Opportunity</option>
+                                    <option>Technical Support</option>
+                                    <option>Feature Request</option>
+                                    <option>Pricing Information</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="4" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="row mt-5">
+            <div class="col-lg-4 text-center mb-4">
+                <div class="contact-info">
+                    <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+                    <h5>Email Us</h5>
+                    <p class="text-muted">contact@360newsfeedback.com</p>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center mb-4">
+                <div class="contact-info">
+                    <i class="fas fa-phone fa-2x text-primary mb-3"></i>
+                    <h5>Call Us</h5>
+                    <p class="text-muted">+91 8660881572</p>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center mb-4">
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+                    <h5>Visit Us</h5>
+                    <p class="text-muted">Whitefield Tech City<br>Bengaluru, 560066</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold text-white mb-4">Ready to Get Started?</h2>
+                <p class="lead text-white mb-4">Join leading newsrooms using AI to improve journalism quality</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('submit_story') }}" class="btn btn-warning btn-lg me-3">
+                        <i class="fas fa-rocket me-2"></i>Start Free Trial
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-chart-bar me-2"></i>View Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Navbar background on scroll
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+    } else {
+        navbar.classList.remove('navbar-scrolled');
+    }
+});
+
+// Contact form submission
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show success message
+    const button = this.querySelector('button[type="submit"]');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        button.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+        button.className = 'btn btn-success btn-lg';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.className = 'btn btn-primary btn-lg';
+            button.disabled = false;
+            this.reset();
+        }, 2000);
+    }, 1000);
+});
+
+// Intersection Observer for animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+        }
+    });
+}, observerOptions);
+
+// Observe elements for animation
+document.querySelectorAll('.feature-card, .process-step').forEach(el => {
+    observer.observe(el);
+});
+</script>
+{% endblock %}

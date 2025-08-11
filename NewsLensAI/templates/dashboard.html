@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard - 360° News Feedback Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="display-6 fw-bold">
+                <i class="fas fa-chart-line me-3 text-primary"></i>Analytics Dashboard
+            </h2>
+            <p class="lead text-muted">Comprehensive insights into community feedback and story performance</p>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_stories }}</h3>
+                    <p class="mb-0">Total Stories</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_feedback }}</h3>
+                    <p class="mb-0">Community Feedback</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-pie fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ "%.1f"|format((total_feedback / total_stories) if total_stories > 0 else 0) }}</h3>
+                    <p class="mb-0">Avg Feedback/Story</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-3x mb-3"></i>
+                    <h3 class="fw-bold">AI</h3>
+                    <p class="mb-0">Powered Analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Performance -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-star me-2"></i>Top Performing Stories
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if stories_with_feedback %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Story</th>
+                                    <th>Category</th>
+                                    <th>Region</th>
+                                    <th class="text-center">Feedback Count</th>
+                                    <th class="text-center">Accuracy</th>
+                                    <th class="text-center">Bias</th>
+                                    <th class="text-center">Relevance</th>
+                                    <th class="text-center">Local Impact</th>
+                                    <th>Published</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for story, feedback_count, avg_accuracy, avg_bias, avg_relevance, avg_local_impact in stories_with_feedback %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('story_detail', story_id=story.id) }}" class="text-decoration-none">
+                                            <strong>{{ story.title[:60] }}{% if story.title|length > 60 %}...{% endif %}</strong>
+                                        </a>
+                                        <br>
+                                        <small class="text-muted">by {{ story.author }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ story.category.title() }}</span>
+                                    </td>
+                                    <td>{{ story.region }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary">{{ feedback_count or 0 }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if avg_accuracy %}
+                                            <span class="rating-badge rating-{{ (avg_accuracy|round|int) }}">
+                                                {{ "%.1f"|format(avg_accuracy) }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if avg_bias %}
+                                            <span class="rating-badge rating-{{ (avg_bias|round|int) }}">
+                                                {{ "%.1f"|format(avg_bias) }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if avg_relevance %}
+                                            <span class="rating-badge rating-{{ (avg_relevance|round|int) }}">
+                                                {{ "%.1f"|format(avg_relevance) }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if avg_local_impact %}
+                                            <span class="rating-badge rating-{{ (avg_local_impact|round|int) }}">
+                                                {{ "%.1f"|format(avg_local_impact) }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ story.date_published.strftime('%b %d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <img src="https://pixabay.com/get/gc60901d95a7e3b6a148b3596c82bd6788f98fb8cd17ccfb6eca3c4e9d618788129c1ba7f22feb8f12312c6bfae3f61db4330888ab69993da9b9c625712d90f02_1280.jpg" 
+                             alt="No data" class="img-fluid mb-4" style="max-width: 300px; opacity: 0.6;">
+                        <h5 class="text-muted">No stories available</h5>
+                        <p class="text-muted">Submit your first story to see analytics data.</p>
+                        <a href="{{ url_for('submit_story') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Submit Story
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category and Region Analytics -->
+    <div class="row mb-5">
+        <!-- Category Statistics -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tags me-2"></i>Stories by Category
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if category_stats %}
+                        <canvas id="categoryChart" width="400" height="300"></canvas>
+                        <div class="category-list mt-4">
+                            {% for category, story_count, feedback_count in category_stats %}
+                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                <span class="fw-bold">{{ category.title() }}</span>
+                                <div>
+                                    <span class="badge bg-primary me-1">{{ story_count }} stories</span>
+                                    <span class="badge bg-success">{{ feedback_count }} feedback</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No category data available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Region Statistics -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>Stories by Region
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if region_stats %}
+                        <canvas id="regionChart" width="400" height="300"></canvas>
+                        <div class="region-list mt-4">
+                            {% for region, story_count, feedback_count in region_stats %}
+                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                <span class="fw-bold">{{ region }}</span>
+                                <div>
+                                    <span class="badge bg-primary me-1">{{ story_count }} stories</span>
+                                    <span class="badge bg-success">{{ feedback_count }} feedback</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-map fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No region data available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insights and Recommendations -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>AI-Powered Insights & Recommendations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <img src="https://pixabay.com/get/g7385ca4ca716d9614aa4e793395f813cafb932a49881ed759da63f40394ae5ba68f48e690a1d6dad93012e9e1880293bf8ca2bb760b19016e352281b420e5a20_1280.jpg" 
+                                 alt="Community engagement" class="img-fluid rounded mb-3" style="height: 150px; object-fit: cover; width: 100%;">
+                            <h6>Community Engagement</h6>
+                            <p class="text-muted small">Foster deeper community connections through local story coverage and feedback</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <img src="https://pixabay.com/get/gdd2f7d5d8334f2de36bd333ccb76a7e3a04657f3ff90f8cdff9fbf77a51f919bc18dfa99d2438d7b977446bf001d5b0b25b84291cd068226c507d62e28fb4cb0_1280.jpg" 
+                                 alt="Content quality" class="img-fluid rounded mb-3" style="height: 150px; object-fit: cover; width: 100%;">
+                            <h6>Content Quality</h6>
+                            <p class="text-muted small">Use feedback data to improve story accuracy and reduce bias in reporting</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-4">
+                            <img src="https://pixabay.com/get/g8c335e30984b73bb98ec7d49807ba1e954b8f3f91da3407f32eb19ab12a6b88d3a3dbd1fb0adf518cd1a1644e3ba349fd329dfae0af052d27c38ab8e16e819d5_1280.jpg" 
+                                 alt="AI insights" class="img-fluid rounded mb-3" style="height: 150px; object-fit: cover; width: 100%;">
+                            <h6>Data-Driven Decisions</h6>
+                            <p class="text-muted small">Leverage sentiment analysis and feedback patterns for editorial strategy</p>
+                        </div>
+                    </div>
+
+                    {% if total_stories > 0 %}
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-chart-line me-2"></i>Performance Summary:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Engagement Rate:</strong> {{ "%.1f"|format((total_feedback / total_stories) * 100) }}% of stories receive community feedback</li>
+                            <li><strong>Most Active Category:</strong> 
+                                {% if category_stats %}
+                                    {{ category_stats|max(attribute=2)|first|title }} 
+                                    ({{ category_stats|max(attribute=2)|list|last }} feedback responses)
+                                {% else %}
+                                    Not enough data
+                                {% endif %}
+                            </li>
+                            <li><strong>Regional Coverage:</strong> Stories covering {{ region_stats|length }} different regions</li>
+                            <li><strong>AI Analysis:</strong> Automated sentiment detection helps identify community concerns</li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    // Initialize dashboard charts
+    {% if category_stats %}
+    initializeCategoryChart([
+        {% for category, story_count, feedback_count in category_stats %}
+        {
+            label: '{{ category.title() }}',
+            stories: {{ story_count }},
+            feedback: {{ feedback_count }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]);
+    {% endif %}
+
+    {% if region_stats %}
+    initializeRegionChart([
+        {% for region, story_count, feedback_count in region_stats %}
+        {
+            label: '{{ region }}',
+            stories: {{ story_count }},
+            feedback: {{ feedback_count }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]);
+    {% endif %}
+</script>
+{% endblock %}
